@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import VerySecret from './components/VerySecret';
 import OpenData from './components/OpenData';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
     return (
