@@ -1,88 +1,56 @@
-# 🍔 FoodFlow Microservices
+# 🛡️ Lock Info Server (Microservices Auth)
 
-## 📖 Overview
-FoodFlow — bu **toza microservice arxitektura** asosida qurilgan restoran buyurtma va to‘lov tizimi. Har bir servis mustaqil, o‘zining DB’siga ega va API Gateway orqali birlashadi. Telegram bot yoki frontend faqat Gateway bilan gaplashadi.
+Ushbu loyiha Spring Boot va Spring Cloud texnologiyalari yordamida qurilgan mikroservisli autentifikatsiya tizimidir. Loyiha foydalanuvchilarni ro'yxatdan o'tkazish, email orqali faollashtirish va JWT token orqali login qilish imkoniyatlarini taqdim etadi.
 
----
+## 🚀 Texnologiyalar Staki
 
-## 🏗️ Architecture
-- **auth-service** → foydalanuvchi autentifikatsiya va avtorizatsiya
-- **restaurant-service** → restoran profillari va joylashuvlar
-- **menu-service** → taomlar, narxlar, menyu kategoriyalari
-- **order-service** → buyurtmalar va statuslar
-- **payment-service** → to‘lovlar va tranzaksiyalar
-- **gateway-service** → API Gateway (routing, security, monitoring)
-- **redis** → umumiy cache/session
-- **postgresql** → har bir servis uchun alohida DB
+*   **Backend:** Java 17, Spring Boot 3.x, Spring Security
+*   **Microservices:** Spring Cloud Gateway (API Routing)
+*   **Security:** JWT (JSON Web Token), BCrypt Password Encoding
+*   **Database:** PostgreSQL
+*   **DevOps:** Docker, Docker Compose
+*   **Frontend:** React (Vite)
 
----
+## 🏗️ Loyiha Strukturasi
 
-## ⚙️ Tech Stack
-- **Backend**: Spring Boot 3, Java 21
-- **Database**: PostgreSQL 15 (har bir servis uchun alohida)
-- **Cache**: Redis 7
-- **Build**: Maven 3.9
-- **Containerization**: Docker, Docker Compose
-- **Gateway**: Spring Cloud Gateway
+Loyiha ikkita asosiy moduldan iborat:
+1.  **Gateway Service (Port: 8080):** Barcha so'rovlarni qabul qiladi va kerakli servisga yo'naltiradi (Routing).
+2.  **Auth Service (Port: 8081):** Login, Register va JWT generatsiyasi uchun javobgar servis.
 
----
+## 🛠️ O'rnatish va Ishga tushirish
 
-## 🚀 Run Locally
-1. **Clone repository**
-   ```bash
-   git clone https://github.com/yourname/foodflow.git
-   cd foodflow
-   ```
-
-2. **Build & Run**
-   ```bash
-   docker-compose up -d --build
-   ```
-
-3. **Check containers**
-   ```bash
-   docker ps
-   ```
-
-4. **Access services via Gateway**
-    - Auth → `http://localhost:8080/auth/...`
-    - Restaurant → `http://localhost:8080/restaurants/...`
-    - Menu → `http://localhost:8080/menu/...`
-    - Order → `http://localhost:8080/orders/...`
-    - Payment → `http://localhost:8080/payments/...`
-
----
-
-## 📂 Project Structure
-```
-auth-service/
-restaurant-service/
-menu-service/
-order-service/
-payment-service/
-gateway-service/
-docker-compose.yml
+### 1. Repozitoriyani klonlash
+```bash
+git clone https://github.com/sardorbekyorkulov/lock-info-server.git
+cd lock-info-server
 ```
 
----
+### 2. Docker orqali ishga tushirish
+Loyihani barcha bazalari va servislari bilan birga ishga tushirish uchun:
+```bash
+docker-compose up -d --build
+```
 
-## 🧪 Testing
-- Unit tests → `mvn test`
-- Integration tests → run via Docker Compose
+### 3. Ma'lumotlar bazasi sozlamalari
+`application.properties` faylida PostgreSQL ulanishlarini tekshiring:
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/lock_info_db
+spring.datasource.username=postgres
+spring.datasource.password=your_password
+```
 
----
+## 🔐 API Endpoints (Gateway orqali)
 
-## 🔒 Security
-- JWT-based authentication (auth-service)
-- Gateway handles authentication & authorization
-- Rate limiting & monitoring via Spring Cloud Gateway
+| Metod | Endpoint | Tavsif |
+| :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Yangi foydalanuvchi yaratish |
+| `POST` | `/api/auth/login` | Tizimga kirish va JWT olish |
+| `GET` | `/api/auth/verify` | Emailni tasdiqlash |
 
----
+## 🧪 Validatsiya va Xatoliklar
+Tizimda **Global Exception Handler** mavjud bo'lib, barcha xatoliklar (noto'g'ri login/parol, band email) tushunarli JSON formatida qaytariladi.
 
-## ✅ Senior Notes
-- Har bir servis mustaqil DB bilan ishlaydi.
-- API orqali bog‘lanish (DB-level foreign key yo‘q).
-- Gateway — yagona kirish nuqtasi.
-- CI/CD pipeline qo‘shish tavsiya etiladi (GitHub Actions yoki GitLab CI).
+## 👨‍💻 Muallif
+**Sardorbek Yorqulov** — Backend muhandisi (Java/Spring Boot).
 
 ---
