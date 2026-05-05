@@ -1,6 +1,7 @@
 package uz.company.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +25,14 @@ public class AuthService {
     private final EmailService emailService;
     private final JwtProvider jwtProvider;
 
+    @Value("${app.server.ip}")
+    private String serverIp;
+
+    @Value("${app.gateway.port}")
+    private String gatewayPort;
+
     @Transactional
     public String register(RegisterRequest request) {
-        // 1. Validation: Check if the login or email is already in use
         if (userRepository.findByLogin(request.getLogin()).isPresent()) {
             throw new RuntimeException("Username Allaqachon ishlatilgan!");
         }
@@ -34,34 +40,28 @@ public class AuthService {
             throw new RuntimeException("Email Allaqachon ishlatilgan!");
         }
 
-        // 2. Create the User Entity
-        // We keep enabled = false because they must click the email link first
         User user = new User();
         user.setLogin(request.getLogin());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword())); // BCrypt Hashing
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEnabled(false);
         user.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(user);
 
-        // 3. Create the Verification Token
-        // The constructor we wrote earlier automatically sets expiryDate to +10 minutes
         String tokenValue = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken(tokenValue, user);
         tokenRepository.save(verificationToken);
 
-        // 4. Prepare and Send the Activation Email
-        // We point the link to the Gateway (port 8080) so it can route to the Auth service
-        String activationLink = "http://localhost:8080/api/auth/activate?token=" + tokenValue;
+        // Dinamik activationLink
+        String activationLink = String.format("http://%s:%s/api/auth/activate?token=%s",
+                serverIp, gatewayPort, tokenValue);
 
-        emailService.sendActivationEmail(
-                user.getEmail(),
-                activationLink
-        );
+        emailService.sendActivationEmail(user.getEmail(), activationLink);
 
         return "Registration successful! Please check your email to activate your account within 10 minutes.";
     }
+
     @Transactional
     public String activate(String tokenValue) {
         VerificationToken token = tokenRepository.findByToken(tokenValue)

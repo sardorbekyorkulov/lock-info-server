@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/auth';
+// Server IP va Gateway portini ko'rsatamiz
+const API_URL = 'http://170.168.6.99:8090/api/auth';
 
 export const registerUser = (userData) => axios.post(`${API_URL}/register`, userData);
 export const loginUser = (credentials) => axios.post(`${API_URL}/login`, credentials);
