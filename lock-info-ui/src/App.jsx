@@ -26,7 +26,7 @@ function App() {
                     path="/very-secret"
                     element={
                         <ProtectedRoute>
-                            <VerySecretPage />
+                            <VerySecret/>
                         </ProtectedRoute>
                     }
                 />
