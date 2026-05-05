@@ -14,8 +14,8 @@ Ushbu loyiha Spring Boot va Spring Cloud texnologiyalari yordamida qurilgan mikr
 ## 🏗️ Loyiha Strukturasi
 
 Loyiha ikkita asosiy moduldan iborat:
-1.  **Gateway Service (Port: 8080):** Barcha so'rovlarni qabul qiladi va kerakli servisga yo'naltiradi (Routing).
-2.  **Auth Service (Port: 8081):** Login, Register va JWT generatsiyasi uchun javobgar servis.
+1.  **Gateway Service (Port: 8090):** Barcha so'rovlarni qabul qiladi va kerakli servisga yo'naltiradi (Routing).
+2.  **Auth Service (Port: 8091):** Login, Register va JWT generatsiyasi uchun javobgar servis.
 
 ## 🛠️ O'rnatish va Ishga tushirish
 
