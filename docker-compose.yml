@@ -1,0 +1,51 @@
+services:
+  auth-db:
+    image: postgres:15-alpine
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-1234}
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-1234}
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+
+  ui-service:
+    build:
+      context: ./lock-info-ui
+    container_name: ui-service
+    ports:
+      - "5173:80"  # Brauzerda http://localhost:5173 orqali kirasiz
+    depends_on:
+      - gateway-service
+    networks:
+      - app-network
+
+networks:
+    app-network:
+      driver: bridge
