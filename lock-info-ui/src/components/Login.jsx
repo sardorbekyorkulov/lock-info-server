@@ -43,11 +43,11 @@ const Login = () => {
 
             // 2. Muvaffaqiyatli holat
             localStorage.setItem('token', res.data.accessToken);
-            setSuccessMsg("Tizimga kirildi! 3 soniyadan keyin yo'naltirilasiz...");
+            setSuccessMsg("Tizimga kirildi!");
 
             setTimeout(() => {
                 navigate('/very-secret');
-            }, 3000);
+            }, 500);
 
         } catch (err) {
             // 3. Xatolik holati (Backend'dan kelgan obyektni emas, faqat message stringini olamiz)

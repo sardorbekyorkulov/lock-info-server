@@ -21,7 +21,14 @@ function App() {
                 <Route path="/" element={<OpenData />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/very-secret" element={<VerySecret />} />
+                <Route
+                    path="/very-secret"
+                    element={
+                        <ProtectedRoute>
+                            <VerySecretPage />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     );

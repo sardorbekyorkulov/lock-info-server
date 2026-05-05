@@ -1,4 +1,4 @@
-package uz.company.auth.service;
+package uz.company.auth.config;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
